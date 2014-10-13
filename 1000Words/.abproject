@@ -5,12 +5,12 @@
   "AppIdentifier": "com.telerik.the1000Words",
   "DisplayName": "1000Words",
   "Author": "",
-  "Description": "",
+  "Description": "1000Words",
   "BundleVersion": "1.0",
   "AndroidVersionCode": "1",
   "iOSDeviceFamily": [
     "1",
-	"2"
+    "2"
   ],
   "iOSBackgroundMode": [],
   "WP8TileTitle": "",
