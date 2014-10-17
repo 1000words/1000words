@@ -12,3 +12,8 @@ body {
     background: url('images/splash.png');
     background-size: cover;
 }
+
+.mapContent{
+    background-color:white;
+    margin-top:80px;
+}
