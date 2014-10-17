@@ -13,7 +13,7 @@ app.MapExplorerViewModel = (function(){
             //alert('init');
             initMap();
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
-            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 1000});
+            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
         };
         
         var show = function(){
@@ -109,13 +109,15 @@ app.MapExplorerViewModel = (function(){
         };
         
         var compassSuccess = function(heading){
-            if (previousCompassAngle){
-                if (previousCompassAngle)
+            if (!previousCompassAngle){
+                previousCompassAngle = 0;
             }
             
-            previousCompassAngle = heading.magneticHeading;
-            
-            drawLine(previousCompassAngle);
+            if (Math.abs(previousCompassAngle - heading.magneticHeading) > 5){
+                previousCompassAngle = heading.magneticHeading;
+        
+                drawLine(previousCompassAngle);
+            }
         };
         
         var compassError = function(compassError){

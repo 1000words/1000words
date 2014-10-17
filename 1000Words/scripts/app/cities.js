@@ -36,8 +36,8 @@ var cities = {
             var result = [];
             for (var i = 0; i < data.length; i++) {
                 var k = {
-                    x: Number(data[i].LatLng.longitude) - x,
-                    y: Number(data[i].LatLng.latitude) - y
+                    x: Number(data[i].Location.longitude) - x,
+                    y: Number(data[i].Location.latitude) - y
                 }
                 dotLeftLineRelation = dotLineRelation(k, a, c),
                 dotRightLineRelation = dotLineRelation(k, b, d),
