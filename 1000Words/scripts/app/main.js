@@ -5,8 +5,11 @@ var app = (function(){
                                                      skin: 'flat'
                                                  });
     
-    var onDeviceReady = function(){
+    var onDeviceReady = function(){ 
         //mobileApp.navigate('views/splashScreen.html');
+        setTimeout(function(){
+            mobileApp.navigate('views/mapExplorerView.html');
+        }, 1000);
         
         navigator.splashscreen.hide();
     }

@@ -1,0 +1,14 @@
+body {
+    background: url('images/background.jpg'); 
+    background-size: cover;
+}
+
+.km-flat .appView,
+.km-flat .km-content{
+    background-color: transparent;
+}
+
+.splashScreen{
+    background: url('images/splash.png');
+    background-size: cover;
+}
