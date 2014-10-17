@@ -25,8 +25,8 @@ var cities = {
                     y: -1 * x1
                 },
                 c = {
-                    x: ax + x1,
-                    y: ay + y1
+                    x: a.x + x1,
+                    y: a.y + y1
                 },
                 d = {
                     x: b.x + x1,
