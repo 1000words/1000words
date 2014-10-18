@@ -1,13 +1,18 @@
-<div data-role="view" 
-     data-layout="defaultLayout" 
-     id="mapExplorerView" 
-     class="appView" 
-     data-model="app.MapExplorerViewModel" 
-     data-init="app.MapExplorerViewModel.init" 
-     data-show="app.MapExplorerViewModel.show"
-     data-stretch="true">
+<div data-role="view" data-layout="defaultLayout" id="mapExplorerView" class="appView" data-model="app.MapExplorerViewModel" data-init="app.MapExplorerViewModel.init" data-show="app.MapExplorerViewModel.show" data-stretch="true">
     <div class="mapContent" id="googleMapView">
-        
+    </div>
+    <div class="notification-list-container" id="notificationListContainer" style="display: none;">
+        <ul id="notificationList">
+        </ul>
+    </div>
+    <div id="notificationDiv" class="notification-container" id="notificationIcon" data-bind="visible: hasNotification">
+        <div class="badge-container" data-bind="{click: onBadgeClicked}">
+            <div class="notification-icon">
+            </div>
+            <div class="badge-counter">
+                <span data-bind="text: notificationCount" style="margin:5px"></span>
+            </div>
+        </div>
     </div>
 
     <div id="mapInfoWindowContent" style="display:none">

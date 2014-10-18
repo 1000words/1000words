@@ -20,7 +20,7 @@ app.MapExplorerViewModel = (function(){
         };
         
         var show = function() {
-            
+            kendo.bind($('#notificationDiv'), notifications.NotificationsViewModel);
         };
         
         var initMap = function() {
