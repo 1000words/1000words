@@ -9,8 +9,12 @@
     
     <div class="image">
         
+        <div id="progress" data-bind="visible: isProgressVisible">
+            <span data-bind="text: progressText"></span>
+        </div>
+        
         <div class="message">
-            <span data-bind="text: activeNotification.message.Message"></span>
+            <span data-bind="text: activeNotification.payload.message.Message"></span>
         </div>
     
         <div class="buttons">

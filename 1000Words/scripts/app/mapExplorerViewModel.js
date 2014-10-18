@@ -16,8 +16,9 @@ app.MapExplorerViewModel = (function(){
         
         var init = function(){
             initMap();
-            navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
+            
             watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
+            navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
         };
         
         var show = function() {
@@ -42,14 +43,8 @@ app.MapExplorerViewModel = (function(){
                     }
                 };
                 
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                //notifications.NotificationsViewModel.onNotificationReceived(notification);
+                //notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
         };
         
@@ -145,21 +140,26 @@ app.MapExplorerViewModel = (function(){
         
         var compassSuccess = function(heading){
             if (!previousCompassAngle){
-                previousCompassAngle = 0;
-            }
-            
-            var limit = 5;
-            
-            if (currentZoom < 5)
-            {
-                limit = 2;
-            }
-            
-            if (Math.abs(previousCompassAngle - heading.magneticHeading) > limit){
                 previousCompassAngle = heading.magneticHeading;
-        
+                                    
                 drawLine(360 - previousCompassAngle);
                 showVisibleCities(360 - previousCompassAngle);
+            }
+            else
+            {
+                var limit = 5;
+                
+                if (currentZoom < 5)
+                {
+                    limit = 2;
+                }
+                
+                if (Math.abs(previousCompassAngle - heading.magneticHeading) > limit){
+                    previousCompassAngle = heading.magneticHeading;
+            
+                    drawLine(360 - previousCompassAngle);
+                    showVisibleCities(360 - previousCompassAngle);
+                }
             }
         };
         

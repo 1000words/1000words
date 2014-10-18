@@ -173,6 +173,18 @@ body {
 #notificationWindow > div.km-content {
     height: 100%;
 }
+#notificationWindow #progress {
+    background: rgba(100,100,100, 0.7);
+    color: #fafafa;
+    width: 180px;
+    padding: 12px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -90px;
+    margin-top: 30px;
+    text-align: center;
+}
 #notificationWindow .image {
     height: 100%;
     width: 100%;
@@ -184,7 +196,7 @@ body {
     position: absolute;
     top: 0;
     width: 100%;
-    background: rgba(100, 100, 100, 0.3);
+    background: rgba(100, 100, 100, 0.4);
     color: #eeeeee;
     padding: 12px 8px;
 }
