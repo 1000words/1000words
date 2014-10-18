@@ -198,11 +198,9 @@ app.MapExplorerViewModel = (function(){
             
             cityMarkers = [];
             
-            kendo.bind($("#mapInfoWindowContent"), infoWindowViewModel);
+            kendo.bind($("#sendRequestPopup"), infoWindowViewModel);
             
-            var infoWindow = new google.maps.InfoWindow({
-                content: $("#mapInfoWindowContent").children(0)[0]
-            });
+            
             
             for (i = 0; i < cities.length; i++){
                 var marker = new google.maps.Marker({
@@ -224,20 +222,25 @@ app.MapExplorerViewModel = (function(){
                 
                 cityMarkers.push(marker);
                 
-                google.maps.event.addListener(marker,'click', (function(marker,cityName,infowindow){ 
+                google.maps.event.addListener(marker,'click', (function(marker,cityName){ 
                     return function() {
                         infoWindowViewModel.set('cityName', cityName);
-                        //infoWindow.setContent($("#mapInfoWindowContent").html());
-                        infoWindow.open(map,marker);
+                        infoWindowViewModel.set('showPopup', true);
                     };
-                })(marker, cities[i].City, infoWindow));  
+                })(marker, cities[i].City));  
             }
         };
         
         var infoWindowViewModel = kendo.observable({
             cityName: 'name',
+            showPopup: false,
             sendRequest: function(){
-                alert(this.cityName);
+                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid);
+                
+                this.set('showPopup', false);
+            },
+            cancel: function(){
+                this.set('showPopup', false);
             }
         });
         

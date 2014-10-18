@@ -24,5 +24,20 @@
         </div>
     </div>
 
+    <div id="sendRequestPopup" class="popupbackground" data-bind="visible: showPopup">
+        <div class="popup">
+            <div>
+                <span data-bind="text: cityName"></span>
+            </div>
+            <div>
+                <button data-bind="{click: sendRequest}">
+                    Send
+                </button>
+                <button data-bind="{click: cancel}">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 

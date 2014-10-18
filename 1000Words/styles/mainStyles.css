@@ -85,3 +85,21 @@ body {
 #notificationList{
     margin: 8px;
 }
+
+.popupbackground{
+    background: url('images/popupback.png');
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.popupbackground .popup{
+    top: 50%;
+    position: relative;
+    height: 100px;
+    margin-top: -50px;
+    background: white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
