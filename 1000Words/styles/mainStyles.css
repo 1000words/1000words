@@ -57,6 +57,7 @@ body {
     z-index: 9999;
     position: absolute;
     text-align: right;
+    width:60px;
 }
 .notification-list-container {
     -webkit-border-top-left-radius: 20px;
