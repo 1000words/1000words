@@ -12,9 +12,10 @@ var app = (function () {
 
     var onDeviceReady = function () {
         enablePushNotifications(); 
-       
         navigator.splashscreen.hide();
+        document.addEventListener("backbutton", onBackKeyDown, false);
     }
+    
     
     var notificationReceived = function(notification){
         notifications.NotificationsViewModel.onNotificationReceived(notification);
@@ -76,6 +77,12 @@ var app = (function () {
     var os = kendo.support.mobileOS,
         statusBarStyle = os.ios && os.flatVersion >= 700 ? 'black-translucent' : 'black';
 
+    function onBackKeyDown() {
+        navigator.app.exitApp();
+        navigator.compass.clearWatch(app.MapExplorerViewModel.whatchId);
+    }
+    
+    
     document.addEventListener('deviceReady', onDeviceReady, false);
     
     var show = function() {

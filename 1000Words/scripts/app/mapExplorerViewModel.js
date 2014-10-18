@@ -11,7 +11,7 @@ app.MapExplorerViewModel = (function(){
             cityMarkers = [],
             currentZoom = 2;
         
-        var searchOffset = [6.5, 5, 4.5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
+        var searchOffset = [7, 7, 5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
         
         var init = function(){
             initMap();
@@ -95,6 +95,7 @@ app.MapExplorerViewModel = (function(){
         
         var registerAppUserOnBackend = function(city){
             var appUserData = app.everlive.data('AppUser');
+            userInfoViewModel.set('location', city);
             
             // check if user is already registerd
             var deviceId = device.uuid;
@@ -128,7 +129,14 @@ app.MapExplorerViewModel = (function(){
                 previousCompassAngle = 0;
             }
             
-            if (Math.abs(previousCompassAngle - heading.magneticHeading) > 5){
+            var limit = 5;
+            
+            if (currentZoom < 5)
+            {
+                limit = 2;
+            }
+            
+            if (Math.abs(previousCompassAngle - heading.magneticHeading) > limit){
                 previousCompassAngle = heading.magneticHeading;
         
                 drawLine(360 - previousCompassAngle);
@@ -210,11 +218,9 @@ app.MapExplorerViewModel = (function(){
             
             cityMarkers = [];
             
-            kendo.bind($("#mapInfoWindowContent"), infoWindowViewModel);
+            kendo.bind($("#sendRequestPopup"), infoWindowViewModel);
             
-            var infoWindow = new google.maps.InfoWindow({
-                content: $("#mapInfoWindowContent").children(0)[0]
-            });
+            
             
             for (i = 0; i < cities.length; i++){
                 var marker = new google.maps.Marker({
@@ -236,21 +242,30 @@ app.MapExplorerViewModel = (function(){
                 
                 cityMarkers.push(marker);
                 
-                google.maps.event.addListener(marker,'click', (function(marker,cityName,infowindow){ 
+                google.maps.event.addListener(marker,'click', (function(marker,cityName){ 
                     return function() {
                         infoWindowViewModel.set('cityName', cityName);
-                        //infoWindow.setContent($("#mapInfoWindowContent").html());
-                        infoWindow.open(map,marker);
+                        infoWindowViewModel.set('showPopup', true);
                     };
-                })(marker, cities[i].City, infoWindow));  
+                })(marker, cities[i].City));  
             }
         };
         
         var infoWindowViewModel = kendo.observable({
             cityName: 'name',
+            showPopup: false,
             sendRequest: function(){
-                alert(this.cityName);
+                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid);
+                
+                this.set('showPopup', false);
+            },
+            cancel: function(){
+                this.set('showPopup', false);
             }
+        });
+        
+        var userInfoViewModel = kendo.observable({
+            location: ''
         });
         
         var markerClicked = function(sender, e){
@@ -298,7 +313,9 @@ app.MapExplorerViewModel = (function(){
         
         return {
             init: init,
-            show: show
+            show: show,
+            whatchId: watchID,
+            userInfoViewModel: userInfoViewModel
         }
     })();
     

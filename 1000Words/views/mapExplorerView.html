@@ -1,4 +1,7 @@
 <div data-role="view" data-layout="defaultLayout" id="mapExplorerView" class="appView" data-model="app.MapExplorerViewModel" data-init="app.MapExplorerViewModel.init" data-show="app.MapExplorerViewModel.show" data-stretch="true">
+    <div class="headerView">
+        <span data-bind="text: userInfoViewModel.location"></span>
+    </div>
     <div class="mapContent" id="googleMapView">
     </div>
     <div class="notification-list-container" id="notificationListContainer" style="display: none;">
@@ -24,5 +27,21 @@
         </div>
     </div>
 
+    <div id="sendRequestPopup" class="popupbackground" data-bind="visible: showPopup">
+        <div class="popup">
+            <div>
+                See what's happening in
+            </div>
+            <div data-bind="text: cityName" class="cityName"></div>
+            <div>
+                <div class="sendButton" data-bind="{click: sendRequest}">
+                    
+                </div>
+                <div class="cancelButton" data-bind="{click: cancel}">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
