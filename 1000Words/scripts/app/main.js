@@ -20,7 +20,7 @@ var app = (function () {
         var currentDevice = everlive.push.currentDevice(false),
             settings = this.settings.Settings.pushSettings;
         
-        settings.notificationCallbackAndroid = function() {};
+        settings.notificationCallbackAndroid = function(e) {alert(JSON.stringify(e))};
         settings.notificationCallbackIOS = function() {};
         
         currentDevice.enableNotifications(settings)
@@ -73,8 +73,13 @@ var app = (function () {
         statusBarStyle = os.ios && os.flatVersion >= 700 ? 'black-translucent' : 'black';
 
     document.addEventListener('deviceReady', onDeviceReady, false);
+    
+    var show = function() {
+    }
 
     return {
-        everlive: everlive
+        everlive: everlive,
+        mobileApp: mobileApp,
+        show: show
     }
 })();
