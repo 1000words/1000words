@@ -73,8 +73,13 @@ var app = (function () {
         statusBarStyle = os.ios && os.flatVersion >= 700 ? 'black-translucent' : 'black';
 
     document.addEventListener('deviceReady', onDeviceReady, false);
+    
+    var show = function() {
+    }
 
     return {
-        everlive: everlive
+        everlive: everlive,
+        mobileApp: mobileApp,
+        show: show
     }
 })();
