@@ -95,6 +95,7 @@ app.MapExplorerViewModel = (function(){
         
         var registerAppUserOnBackend = function(city){
             var appUserData = app.everlive.data('AppUser');
+            userInfoViewModel.set('location', city);
             
             // check if user is already registerd
             var deviceId = device.uuid;
@@ -263,6 +264,10 @@ app.MapExplorerViewModel = (function(){
             }
         });
         
+        var userInfoViewModel = kendo.observable({
+            location: ''
+        });
+        
         var markerClicked = function(sender, e){
             
         };
@@ -309,7 +314,8 @@ app.MapExplorerViewModel = (function(){
         return {
             init: init,
             show: show,
-            whatchId: watchID
+            whatchId: watchID,
+            userInfoViewModel: userInfoViewModel
         }
     })();
     
