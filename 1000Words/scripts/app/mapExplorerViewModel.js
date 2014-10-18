@@ -20,7 +20,19 @@ app.MapExplorerViewModel = (function(){
         };
         
         var show = function() {
+            kendo.bind($('#notificationDiv'), notifications.NotificationsViewModel);
             
+            setTimeout(function() {
+                var notification = {
+                    payload: {
+                        message: {
+                            Message: 'You received a photo request from Novi Sad!'
+                        }
+                    }
+                };
+                
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
+            }, 200);
         };
         
         var initMap = function() {
@@ -205,6 +217,12 @@ app.MapExplorerViewModel = (function(){
             
             cityMarkers = [];
             
+            kendo.bind($("#mapInfoWindowContent"), infoWindowViewModel);
+            
+            var infoWindow = new google.maps.InfoWindow({
+                content: $("#mapInfoWindowContent").children(0)[0]
+            });
+            
             for (i = 0; i < cities.length; i++){
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(cities[i].Location.latitude, cities[i].Location.longitude),
@@ -224,7 +242,26 @@ app.MapExplorerViewModel = (function(){
                 marker.label = label;
                 
                 cityMarkers.push(marker);
+                
+                google.maps.event.addListener(marker,'click', (function(marker,cityName,infowindow){ 
+                    return function() {
+                        infoWindowViewModel.set('cityName', cityName);
+                        //infoWindow.setContent($("#mapInfoWindowContent").html());
+                        infoWindow.open(map,marker);
+                    };
+                })(marker, cities[i].City, infoWindow));  
             }
+        };
+        
+        var infoWindowViewModel = kendo.observable({
+            cityName: 'name',
+            sendRequest: function(){
+                alert(this.cityName);
+            }
+        });
+        
+        var markerClicked = function(sender, e){
+            
         };
         
         var checkLineIntersection = function(line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
