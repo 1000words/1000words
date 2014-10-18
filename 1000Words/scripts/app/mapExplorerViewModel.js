@@ -41,7 +41,7 @@ app.MapExplorerViewModel = (function(){
                     }
                 };
                 
-                //notifications.NotificationsViewModel.onNotificationReceived(notification);
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
                 //notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
         };
