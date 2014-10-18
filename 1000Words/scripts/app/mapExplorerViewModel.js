@@ -196,6 +196,10 @@ app.MapExplorerViewModel = (function(){
             
             cityMarkers = [];
             
+            var infoWindow = new google.maps.InfoWindow({
+                content: 'contentString'
+            });
+            
             for (i = 0; i < cities.length; i++){
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(cities[i].Location.latitude, cities[i].Location.longitude),
@@ -215,7 +219,18 @@ app.MapExplorerViewModel = (function(){
                 marker.label = label;
                 
                 cityMarkers.push(marker);
+                
+                google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+                    return function() {
+                        infoWindow.setContent(content);
+                        infoWindow.open(map,marker);
+                    };
+                })(marker,cities[i].City,infoWindow));  
             }
+        };
+        
+        var markerClicked = function(sender, e){
+            
         };
         
         var checkLineIntersection = function(line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
