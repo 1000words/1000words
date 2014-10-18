@@ -10,17 +10,16 @@ app.MapExplorerViewModel = (function(){
             previousCompassAngle;
         
         var init = function(){
-            //alert('init');
             initMap();
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
             watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
         };
         
-        var show = function(){
-            //alert('show');
+        var show = function() {
+            
         };
         
-        var initMap = function(){
+        var initMap = function() {
             var mapProp = {
                 center: new google.maps.LatLng(0,0),
                 zoom: 2,
@@ -43,10 +42,6 @@ app.MapExplorerViewModel = (function(){
         };
         
         var loadCurrentPosition = function(){
-            //var marker = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng)});
-
-            //marker.setMap(map);
-            
             var latLng = new google.maps.LatLng(lat, lng);
             map.panTo(latLng);  
         };
@@ -66,7 +61,6 @@ app.MapExplorerViewModel = (function(){
                         }
                         
                         dfd.resolve(location.formatted_address);
-                        //registerAppUserOnBackend(location.formatted_address);
                     } else {
                         alert('No results found');
                     }
@@ -99,7 +93,7 @@ app.MapExplorerViewModel = (function(){
                     // first time register, create
                     appUserData.create(appUser);
                 } else {
-                    // already registerd, update
+                    // already registered, update
                     appUser.Id = data.result[0].Id;
                     appUserData.updateSingle(appUser);
                 }
