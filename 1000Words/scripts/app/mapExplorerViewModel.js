@@ -139,6 +139,9 @@ app.MapExplorerViewModel = (function(){
         var compassSuccess = function(heading){
             if (!previousCompassAngle){
                 previousCompassAngle = heading.magneticHeading;
+                                    
+                drawLine(360 - previousCompassAngle);
+                showVisibleCities(360 - previousCompassAngle);
             }
             else
             {
