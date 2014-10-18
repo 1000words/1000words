@@ -10,31 +10,49 @@ notifications.NotificationsViewModel = kendo.observable({
     onNotificationReceived: function (notification) {
         this.set('hasNotification', true);
         if (typeof (notification) != 'undefined') {
-            this.notifications.push(notification);
+            var n = {
+                payload: notification,
+            };
+
+            this.notifications.push(n);
             this.set('notificationCount', this.notifications.length);
         }
     },
 
-    onBadgeClicked: function () {    
+    onBadgeClicked: function () {
         var container = $('#notificationListContainer');
         if (!container.is(':visible')) {
             $("#notificationList").kendoMobileListView({
                 dataSource: this.notifications,
-                template: "<div>#:payload.message.Message#<div>",
-                click: this.notificationListItemClick,
+                template: "<div><span id='accept#:payload.payload.message.DeviceId#'>#:payload.payload.message.Message#</span><span id='reject#:payload.payload.message.DeviceId#'> X </span></div>",
             });
             container.show("slow");
+
+            for (var i = 0; i < this.notifications.length; i++) {
+                var notif = this.notifications[i];
+                $("#accept" + notif.payload.payload.message.DeviceId).click((function (n) {
+                    return function () {
+                        app.NotificationWindowViewModel.activeNotification = n.payload;
+                        app.mobileApp.navigate('views/notificationWindow.html');
+                    };
+                })(notif));
+                $("#reject" + notif.payload.payload.message.DeviceId).click((function (n) {
+                    return function () {
+                        alert('reject ' + n.payload.payload.message.DeviceId);
+                    };
+                })(notif));
+            }
         } else {
             container.hide("slow");
         }
     },
-    
-    notificationListItemClick: function(e) {
-        app.NotificationWindowViewModel.activeNotification = e.dataItem.payload;
+
+    notificationListItemClick: function (e) {
+        app.notificationWindowViewModel.activeNotification = e.dataItem.payload;
         app.mobileApp.navigate('views/notificationWindow.html');
     },
-    
-    dismissClick: function(e) {
-        
+
+    dismissClick: function (e) {
+
     }
 });
