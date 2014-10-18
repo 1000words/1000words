@@ -21,10 +21,11 @@ notifications.NotificationsViewModel = kendo.observable({
 
     onBadgeClicked: function () {
         var container = $('#notificationListContainer');
+        $('#notificationListContainer').kendoMobileScroller();
         if (!container.is(':visible')) {
             $("#notificationList").kendoMobileListView({
                 dataSource: this.notifications,
-                template: "<div><span id='accept#:payload.payload.message.DeviceId#'>#:payload.payload.message.Message#</span><span id='reject#:payload.payload.message.DeviceId#'> X </span></div>",
+                template: "<div><span id='accept#:payload.payload.message.DeviceId#'>#:payload.payload.message.Message#</span><span id='reject#:payload.payload.message.DeviceId#'> X </span></div>"
             });
             container.show("slow");
 

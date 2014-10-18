@@ -78,7 +78,7 @@ body {
     z-index: 9999;
     position: absolute;
     right: 60px;
-    overflow: auto;
+    overflow: hidden;
 }
 .km-flat .km-list>li {
     background: rgb(240, 172, 25);    
