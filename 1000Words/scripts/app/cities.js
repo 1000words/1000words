@@ -1,6 +1,8 @@
-var cities = (function() {
+var app = app || {};
+
+app.Cities = (function(){
     var getAllCities = function () {
-        var dfd = new $.Deffered();
+        var dfd = new $.Deferred();
 
         app.everlive.data('AppUser').get().then(function (data) {
             dfd.resolve(data);
@@ -10,7 +12,7 @@ var cities = (function() {
     }
 
     var filterCities = function (userLocation, directionPoint) {
-        var dfd = new $.Deffered();
+        var dfd = new $.Deferred();
         $.when(getAllCities()).then(function (allCities) {
             var x = userLocation.longitude,
                 y = userLocation.latitude,
@@ -34,17 +36,18 @@ var cities = (function() {
                 };
 
             var result = [];
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < allCities.count; i++) {
                 var k = {
-                    x: Number(data[i].Location.longitude) - x,
-                    y: Number(data[i].Location.latitude) - y
+                    x: Number(allCities.result[i].Location.longitude) - x,
+                    y: Number(allCities.result[i].Location.latitude) - y
                 }
                 dotLeftLineRelation = dotLineRelation(k, a, c),
                 dotRightLineRelation = dotLineRelation(k, b, d),
                 dotBottomLineRelation = dotLineRelation(k, a, b);
 
                 if (dotLeftLineRelation < 0 && dotRightLineRelation > 0 && dotBottomLineRelation > 0) {
-                    result.push(data[i]);
+                    result.push(allCities.result[i]);
+                    
                 }
             }
             
@@ -59,6 +62,6 @@ var cities = (function() {
 
     return {
         getAllCities: getAllCities,
-        ffilterCities: filterCities
+        filterCities: filterCities
     }
-}());
+})();
