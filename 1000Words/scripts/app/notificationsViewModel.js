@@ -34,14 +34,14 @@ notifications.NotificationsViewModel = kendo.observable({
         for (var i = 0; i < this.notifs.length; i++) {
             var notif = this.notifs[i];
 
-            $("#accept" + notif.payload.payload.message.DeviceId).click((function (n) {
+            $("#accept" + notif.payload.message.DeviceId).click((function (n) {
                 return function () {
                     app.NotificationWindowViewModel.activeNotification = n.payload;
                     app.mobileApp.navigate('views/notificationWindow.html');
                 };
             })(notif));
 
-            $("#reject" + notif.payload.payload.message.DeviceId).click((function (n, index, removeNotification) {
+            $("#reject" + notif.payload.message.DeviceId).click((function (n, index, removeNotification) {
                 return function () {
                     removeNotification(index);
                 }
