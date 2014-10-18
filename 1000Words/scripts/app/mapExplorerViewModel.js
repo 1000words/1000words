@@ -65,12 +65,12 @@ app.MapExplorerViewModel = (function(){
             lng = position.coords.longitude;
             loadCurrentPosition();
             
-            navigator.compass.getCurrentHeading(compassFirstSuccess, compassError);
-            
             $.when(getUserCity()).then(function(city){
                 userLocationCity = city;
                 registerAppUserOnBackend(city);
             });
+            
+            navigator.compass.getCurrentHeading(compassFirstSuccess, compassError);
         };
         
         var geolocationError = function(error){
@@ -144,11 +144,11 @@ app.MapExplorerViewModel = (function(){
         };
         
         var compassFirstSuccess = function (heading){
-            previousCompassAngle = heading.magneticHeading;
-            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
-            
+            previousCompassAngle = heading.magneticHeading;           
             drawLine(360 - previousCompassAngle);
             showVisibleCities(360 - previousCompassAngle);
+            
+            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
         };
         
         var compassSuccess = function(heading){
