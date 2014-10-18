@@ -45,7 +45,8 @@ app.Cities = (function(){
                 dotRightLineRelation = dotLineRelation(k, b, d),
                 dotBottomLineRelation = dotLineRelation(k, a, b);
 
-                if (dotLeftLineRelation < 0 && dotRightLineRelation > 0 && dotBottomLineRelation > 0) {
+                if ((dotLeftLineRelation < 0 && dotRightLineRelation > 0 && dotBottomLineRelation > 0) ||
+                       userLocation.city === allCities.result[i].City) {
                     result.push(allCities.result[i]);
                     
                 }

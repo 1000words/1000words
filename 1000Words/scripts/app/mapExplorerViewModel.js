@@ -5,6 +5,7 @@ app.MapExplorerViewModel = (function(){
         var map,
             lat,
             lng,
+            userLocationCity,
             watchID,
             flightPath,
             previousCompassAngle,
@@ -41,8 +42,14 @@ app.MapExplorerViewModel = (function(){
                     }
                 };
                 
-                //notifications.NotificationsViewModel.onNotificationReceived(notification);
-                //notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
+                notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
+                notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
+                notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
+                notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
         };
         
@@ -65,6 +72,7 @@ app.MapExplorerViewModel = (function(){
             lng = position.coords.longitude;
             loadCurrentPosition();
             $.when(getUserCity()).then(function(city){
+                userLocationCity = city;
                 registerAppUserOnBackend(city);
             });
         };
@@ -208,7 +216,8 @@ app.MapExplorerViewModel = (function(){
             
             var userLocation = {
                 longitude: lng,
-                latitude: lat
+                latitude: lat,
+                city: userLocationCity
             };  
             
             var directionPoint = {
