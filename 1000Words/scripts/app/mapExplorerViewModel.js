@@ -21,6 +21,18 @@ app.MapExplorerViewModel = (function(){
         
         var show = function() {
             kendo.bind($('#notificationDiv'), notifications.NotificationsViewModel);
+            
+            setTimeout(function() {
+                var notification = {
+                    payload: {
+                        message: {
+                            Message: 'You received a photo request from Novi Sad!'
+                        }
+                    }
+                };
+                
+                notifications.NotificationsViewModel.onNotificationReceived(notification);
+            }, 200);
         };
         
         var initMap = function() {
