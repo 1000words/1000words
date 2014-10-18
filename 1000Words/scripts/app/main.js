@@ -33,7 +33,7 @@ var app = (function () {
                     return currentDevice.getRegistration();
                 },
                 function(err) {
-                    alert("ERROR!<br /><br />An error occured while initializing the device for push notifications.<br/><br/>" + err.message);
+                    //alert("ERROR!<br /><br />An error occured while initializing the device for push notifications.<br/><br/>" + err.message);
                 }
             ).then(
                 function(registration) {                        

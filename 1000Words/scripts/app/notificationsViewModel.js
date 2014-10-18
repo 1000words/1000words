@@ -10,13 +10,7 @@ notifications.NotificationsViewModel = kendo.observable({
     onNotificationReceived: function (notification) {
         this.set('hasNotification', true);
         if (typeof (notification) != 'undefined') {
-            var n = {
-                payload: notification,
-                notificationListItemClick: this.notificationListItemClick,
-                dismissClick: this.dismissClick
-            };
-            
-            this.notifications.push(n);
+            this.notifications.push(notification);
             this.set('notificationCount', this.notifications.length);
         }
     },
@@ -26,7 +20,8 @@ notifications.NotificationsViewModel = kendo.observable({
         if (!container.is(':visible')) {
             $("#notificationList").kendoMobileListView({
                 dataSource: this.notifications,
-                template: "<div><span data-bind='{click: notificationListItemClick}'>#:payload.payload.message.Message#</span><span data-bind='click: dismissClick'>X</span><div>",
+                template: "<div>#:payload.message.Message#<div>",
+                click: this.notificationListItemClick,
             });
             container.show("slow");
         } else {
@@ -35,7 +30,7 @@ notifications.NotificationsViewModel = kendo.observable({
     },
     
     notificationListItemClick: function(e) {
-        app.notificationWindowViewModel.activeNotification = e.dataItem.payload;
+        app.NotificationWindowViewModel.activeNotification = e.dataItem.payload;
         app.mobileApp.navigate('views/notificationWindow.html');
     },
     
