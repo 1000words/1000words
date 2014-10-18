@@ -16,8 +16,6 @@ app.MapExplorerViewModel = (function(){
         
         var init = function(){
             initMap();
-            
-            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
         };
         
@@ -71,6 +69,9 @@ app.MapExplorerViewModel = (function(){
             lat = position.coords.latitude;
             lng = position.coords.longitude;
             loadCurrentPosition();
+            
+            navigator.compass.getCurrentHeading(compassFirstSuccess, compassError);
+            
             $.when(getUserCity()).then(function(city){
                 userLocationCity = city;
                 registerAppUserOnBackend(city);
@@ -143,15 +144,20 @@ app.MapExplorerViewModel = (function(){
             });
         };
         
+        var compassError = function(error){
+            alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+        };
+        
+        var compassFirstSuccess = function (heading){
+            previousCompassAngle = heading.magneticHeading;
+            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
+            
+            drawLine(360 - previousCompassAngle);
+            showVisibleCities(360 - previousCompassAngle);
+        };
+        
         var compassSuccess = function(heading){
-            if (!previousCompassAngle){
-                previousCompassAngle = heading.magneticHeading;
-                                    
-                drawLine(360 - previousCompassAngle);
-                showVisibleCities(360 - previousCompassAngle);
-            }
-            else
-            {
+            if (previousCompassAngle){
                 var limit = 5;
                 
                 if (currentZoom < 5)
