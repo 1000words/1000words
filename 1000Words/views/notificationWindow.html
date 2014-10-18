@@ -1,5 +1,23 @@
-<div data-role="view" data-layout="defaultLayout" id="notificationWindow" class="appView" data-model="app.NotificationWindowViewModel" data-init="app.NotificationWindowViewModel.init" data-show="app.NotificationWindowViewModel.show" data-stretch="true">
+<div data-role="view" 
+     data-layout="defaultLayout"
+     id="notificationWindow" 
+     class="appView"
+     data-model="app.NotificationWindowViewModel"
+     data-init="app.NotificationWindowViewModel.init" 
+     data-show="app.NotificationWindowViewModel.show"
+     data-stretch="true">
     
+    <div class="image">
+        
+        <div class="message">
+            <span data-bind="text: activeNotification.message.Message"></span>
+        </div>
+    
+        <div class="buttons">
+            <a href="#" id="replyButton" class="button" data-bind="click: reply">Reply</a>
+            <a href="#" id="dismissButton" class="button" data-bind="click: dismiss">Dismiss</a>
+        </div>
 
+    </div>
+    
 </div>
-

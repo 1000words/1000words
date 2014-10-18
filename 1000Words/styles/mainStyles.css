@@ -86,7 +86,6 @@ body {
 #notificationList{
     margin: 8px;
 }
-
 .popupbackground{
     background: url('images/popupback.png');
     position: absolute;
@@ -153,4 +152,48 @@ body {
     color: white;
     padding-left: 38px;
     margin: 5px;
+}
+#notificationWindow {
+    background: #111111;
+    display: block;
+}
+#notificationWindow > div.km-content {
+    height: 100%;
+}
+#notificationWindow .image {
+    height: 100%;
+    width: 100%;
+    background: #DDDDDD;
+    background: url('images/ns.jpg');
+    background-size: cover;
+}
+#notificationWindow .message {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: rgba(100, 100, 100, 0.3);
+    color: #eeeeee;
+    padding: 12px 8px;
+}
+#notificationWindow .buttons {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    margin-bottom: 16px;
+}
+#notificationWindow .buttons .button {
+    width: 100px;
+    display: inline-block;
+    padding: 12px;
+    text-decoration: none;
+    color: #fafafa;
+}
+#replyButton {
+    background: rgb(250,180,26);
+    margin-right: 8px;
+}
+#dismissButton {   
+    background: gray;
+    margin-left: 8px;
 }

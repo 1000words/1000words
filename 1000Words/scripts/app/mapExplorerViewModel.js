@@ -41,43 +41,9 @@ app.MapExplorerViewModel = (function(){
                     }
                 };
                 
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
-                                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                //notifications.NotificationsViewModel.onNotificationReceived(notification);
+                //notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
-            
-            $( "#notificationList" ).on("swipe", "li", function swipeHandler( event ){
-                alert('swipe'); 
-              });
         };
         
         var initMap = function() {
