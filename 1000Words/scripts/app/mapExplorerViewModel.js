@@ -7,7 +7,8 @@ app.MapExplorerViewModel = (function(){
             lng,
             watchID,
             flightPath,
-            previousCompassAngle;
+            previousCompassAngle,
+            cityMarkers = [];
         
         var init = function(){
             //alert('init');
@@ -116,7 +117,8 @@ app.MapExplorerViewModel = (function(){
             if (Math.abs(previousCompassAngle - heading.magneticHeading) > 5){
                 previousCompassAngle = heading.magneticHeading;
         
-                drawLine(previousCompassAngle);
+                drawLine(360 - previousCompassAngle);
+                showVisibleCities(360 - previousCompassAngle);
             }
         };
         
@@ -125,37 +127,14 @@ app.MapExplorerViewModel = (function(){
         };
         
         var drawLine = function(angle){
-            var angleInRad = (360-angle) * Math.PI / 180;
             var px = lng;
-            var py = lat + 1000;
+            var py = 90;
             
-            // rotate px and py around destination
-            var descX = Math.cos(angleInRad)*(px-lat) - Math.sin(angleInRad)*(py-lng)+lat;
-            var descY = Math.sin(angleInRad)*(px-lat) + Math.cos(angleInRad)*(py-lng)+lng;
-            
-            // check if new line is out of bounds
-            var inter1 = checkLineIntersection(-170, 80, 170, 80, lng, lat, descX, descY);
-            var inter2 = checkLineIntersection(170, 80, 170, -80, lng, lat, descX, descY);
-            var inter3 = checkLineIntersection(170, -80, -170, -80, lng, lat, descX, descY);
-            var inter4 = checkLineIntersection(-170, -80, -170, 80, lng, lat, descX, descY);
-            
-            if (inter1.onLine1 === true && inter1.onLine2 === true) {
-                descX = inter1.x;
-                descY = inter1.y;
-            } else if (inter2.onLine1 === true && inter2.onLine2 === true){
-                descX = inter2.x;
-                descY = inter2.y;
-            } else if (inter3.onLine1 === true && inter3.onLine2 === true){
-                descX = inter3.x;
-                descY = inter3.y;
-            } else if (inter4.onLine1 === true && inter4.onLine2 === true){
-                descX = inter4.x;
-                descY = inter4.y;
-            }
+            var rotatedPoint = rotatePoint({longitude:px, latitude:py},{longitude:lng, latitude:lat}, angle);
             
             var flightPlanCoordinates = [
                 new google.maps.LatLng(lat, lng),
-                new google.maps.LatLng(descY, descX)
+                new google.maps.LatLng(rotatedPoint.y, rotatedPoint.x)
             ];
           
             if (flightPath){
@@ -171,6 +150,72 @@ app.MapExplorerViewModel = (function(){
             });
             
             flightPath.setMap(map);
+        };
+        
+        var rotatePoint = function(point, origion, degree) {
+            var x =  origion.longitude + Math.cos(toRadians(degree)) * (point.longitude - origion.longitude) - Math.sin(toRadians(degree))  * (point.latitude - origion.latitude) / Math.abs(Math.cos(toRadians(origion.latitude)));
+            var y = origion.latitude + (Math.sin(toRadians(degree)) * (point.longitude - origion.longitude) * Math.abs(Math.cos(toRadians(origion.latitude))) + Math.cos(toRadians(degree))   * (point.latitude - origion.latitude));
+           
+            return {
+                x:x,
+                y:y
+            };
+        };
+        
+        function toRadians(Value) {
+            /** Converts numeric degrees to radians */
+            return Value * Math.PI / 180;
+        }
+        
+        var showVisibleCities = function(angle){
+            var px = lng;
+            var py = lat + 5;
+            
+            var rotatedPoint = rotatePoint({longitude:px, latitude:py},{longitude:lng, latitude:lat}, angle);
+            
+            var userLocation = {
+                longitude: lng,
+                latitude: lat
+            };  
+            
+            var directionPoint = {
+                longitude: rotatedPoint.x,
+                latitude: rotatedPoint.y
+            };
+            
+            $.when(app.Cities.filterCities(userLocation, directionPoint)).then(function(result){
+                drawVisibleCities(result);
+            });
+        };
+        
+        var drawVisibleCities = function(cities){
+            for (i = 0; i < cityMarkers.length; i++){
+                cityMarkers[i].label.setMap(null);
+                cityMarkers[i].setMap(null);
+            }
+            
+            cityMarkers = [];
+            
+            for (i = 0; i < cities.length; i++){
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(cities[i].Location.latitude, cities[i].Location.longitude),
+                    map: map,
+                    icon: {url: 'styles/images/cityPoint.png', size:new google.maps.Size(20, 20)}
+                });
+                
+                var label = new Label({
+                    map: map
+                });
+                label.bindTo('position', marker);
+                //label.bindTo('text', cities[i].City);
+                label.set('text', cities[i].City);
+                label.bindTo('visible', marker);
+                label.bindTo('clickable', marker);
+                label.bindTo('zIndex', marker);
+                marker.label = label;
+                
+                cityMarkers.push(marker);
+            }
         };
         
         var checkLineIntersection = function(line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
