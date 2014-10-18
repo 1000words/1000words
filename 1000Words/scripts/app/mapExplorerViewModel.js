@@ -198,8 +198,10 @@ app.MapExplorerViewModel = (function(){
             
             cityMarkers = [];
             
+            kendo.bind($("#mapInfoWindowContent"), infoWindowViewModel);
+            
             var infoWindow = new google.maps.InfoWindow({
-                content: 'contentString'
+                content: $("#mapInfoWindowContent").children(0)[0]
             });
             
             for (i = 0; i < cities.length; i++){
@@ -222,14 +224,22 @@ app.MapExplorerViewModel = (function(){
                 
                 cityMarkers.push(marker);
                 
-                google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+                google.maps.event.addListener(marker,'click', (function(marker,cityName,infowindow){ 
                     return function() {
-                        infoWindow.setContent(content);
+                        infoWindowViewModel.set('cityName', cityName);
+                        //infoWindow.setContent($("#mapInfoWindowContent").html());
                         infoWindow.open(map,marker);
                     };
-                })(marker,cities[i].City,infoWindow));  
+                })(marker, cities[i].City, infoWindow));  
             }
         };
+        
+        var infoWindowViewModel = kendo.observable({
+            cityName: 'name',
+            sendRequest: function(){
+                alert(this.cityName);
+            }
+        });
         
         var markerClicked = function(sender, e){
             

@@ -9,5 +9,15 @@
     <div class="mapContent" id="googleMapView">
         
     </div>
+
+    <div id="mapInfoWindowContent" style="display:none">
+        <div>
+            <span data-bind="text: cityName"></span>
+            <div data-bind="{click: sendRequest}">
+                <span>Send</span>
+            </div>
+        </div>
+    </div>
+
 </div>
 
