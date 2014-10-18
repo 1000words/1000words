@@ -16,16 +16,16 @@ var app = (function () {
         navigator.splashscreen.hide();
     }
     
+    var notificationReceived = function(notification){
+        notifications.NotificationsViewModel.onNotificationReceived(notification);
+    }
+    
     var enablePushNotifications = function () {
         var currentDevice = everlive.push.currentDevice(false),
             settings = this.settings.Settings.pushSettings;
         
-        settings.notificationCallbackAndroid = function(notification) {
-            notifications.NotificationsViewModel.onNotificationReceived(notification);
-        };
-        settings.notificationCallbackIOS = function() {
-            
-        };
+        settings.notificationCallbackAndroid = notificationReceived;
+        settings.notificationCallbackIOS = notificationReceived;
         
         currentDevice.enableNotifications(settings)
             .then(
@@ -77,8 +77,13 @@ var app = (function () {
         statusBarStyle = os.ios && os.flatVersion >= 700 ? 'black-translucent' : 'black';
 
     document.addEventListener('deviceReady', onDeviceReady, false);
+    
+    var show = function() {
+    }
 
     return {
-        everlive: everlive
+        everlive: everlive,
+        mobileApp: mobileApp,
+        show: show
     }
 })();
