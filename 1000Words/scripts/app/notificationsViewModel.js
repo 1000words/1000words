@@ -1,40 +1,15 @@
-var app = app || {};
+var notifications = notifications || {};
 
-app.NotificationsViewModel = kendo.observable({
-    notifications: [{
-        Message: 'Test',
-        Payload: {
-            DeviceId: '2123121'
-        }
-    }, {
-        Message: 'Test1',
-        Payload: {
-            DeviceId: '2123121'
-        }
-    }, {
-        Message: 'Test3',
-        Payload: {
-            DeviceId: '2123121'
-        }
-    }, {
-        Message: 'Test4',
-        Payload: {
-            DeviceId: '2123121'
-        }
-    }, {
-        Message: 'Test5',
-        Payload: {
-            DeviceId: '2123121'
-        }
-    }],
+notifications.NotificationsViewModel = kendo.observable({
+    notifications: [],
 
     hasNotification: false,
 
-    notificationCount: 76,
+    notificationCount: 0,
 
     onNotificationReceived: function (notification) {
         this.set('hasNotification', true);
-        if (typeof (noticiation) != 'undefined') {
+        if (typeof (notification) != 'undefined') {
             this.notifications.push(notification);
             this.set('notificationCount', this.notifications.length);
         }

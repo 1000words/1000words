@@ -20,8 +20,12 @@ var app = (function () {
         var currentDevice = everlive.push.currentDevice(false),
             settings = this.settings.Settings.pushSettings;
         
-        settings.notificationCallbackAndroid = function() {};
-        settings.notificationCallbackIOS = function() {};
+        settings.notificationCallbackAndroid = function(notification) {
+            notifications.NotificationsViewModel.onNotificationReceived(notification);
+        };
+        settings.notificationCallbackIOS = function() {
+            
+        };
         
         currentDevice.enableNotifications(settings)
             .then(
