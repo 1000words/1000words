@@ -11,7 +11,7 @@ app.MapExplorerViewModel = (function(){
             cityMarkers = [],
             currentZoom = 2;
         
-        var searchOffset = [6.5, 5, 4.5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
+        var searchOffset = [7, 7, 5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
         
         var init = function(){
             initMap();
@@ -116,7 +116,14 @@ app.MapExplorerViewModel = (function(){
                 previousCompassAngle = 0;
             }
             
-            if (Math.abs(previousCompassAngle - heading.magneticHeading) > 5){
+            var limit = 5;
+            
+            if (currentZoom < 5)
+            {
+                limit = 2;
+            }
+            
+            if (Math.abs(previousCompassAngle - heading.magneticHeading) > limit){
                 previousCompassAngle = heading.magneticHeading;
         
                 drawLine(360 - previousCompassAngle);
@@ -261,7 +268,8 @@ app.MapExplorerViewModel = (function(){
         
         return {
             init: init,
-            show: show
+            show: show,
+            whatchId: watchID
         }
     })();
     
