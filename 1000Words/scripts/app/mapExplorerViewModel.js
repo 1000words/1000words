@@ -1,84 +1,71 @@
 var app = app || {};
 
-app.MapExplorerViewModel = (function () {
-    var viewModel = (function () {
+app.MapExplorerViewModel = (function(){
+    var viewModel = (function(){
         var map,
             lat,
             lng,
             watchID,
             flightPath,
             previousCompassAngle,
-            nesto = kendo.observable({ value: 'false'});
-
-        var init = function () {
+            cityMarkers = [];
+        
+        var init = function(){
             //alert('init');
             initMap();
-            navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {
-                enableHighAccuracy: true
-            });
-            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {
-                frequency: 100
-            });
+            navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
+            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
         };
-
-        var show = function () {
+        
+        var show = function(){
             //alert('show');
-            kendo.bind($("#notificationDiv"), app.NotificationsViewModel);
-            setTimeout(function(){
-                app.NotificationsViewModel.onNotificationReceived();
-            }, 2000);
         };
-
-        var initMap = function () {
+        
+        var initMap = function(){
             var mapProp = {
-                center: new google.maps.LatLng(0, 0),
+                center: new google.maps.LatLng(0,0),
                 zoom: 2,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-
-            map = new google.maps.Map(document.getElementById("googleMapView"), mapProp);
+                mapTypeId: google.maps.MapTypeId.ROADMAP};
+            
+            map = new google.maps.Map(document.getElementById("googleMapView"), mapProp);  
         };
-
-        var geolocationSuccess = function (position) {
+        
+        var geolocationSuccess = function(position){
             lat = position.coords.latitude;
             lng = position.coords.longitude;
             loadCurrentPosition();
-            $.when(getUserCity()).then(function (city) {
+            $.when(getUserCity()).then(function(city){
                 registerAppUserOnBackend(city);
             });
         };
-
-        var geolocationError = function (error) {
-            alert('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+        
+        var geolocationError = function(error){
+            alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
         };
-
-        var loadCurrentPosition = function () {
+        
+        var loadCurrentPosition = function(){
             //var marker = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng)});
 
             //marker.setMap(map);
-
+            
             var latLng = new google.maps.LatLng(lat, lng);
-            map.panTo(latLng);
+            map.panTo(latLng);  
         };
-
-        var getUserCity = function () {
+        
+        var getUserCity = function(){
             var dfd = new $.Deferred();
-
+            
             var latLng = new google.maps.LatLng(lat, lng);
             var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({
-                'latLng': latLng
-            }, function (results, status) {
+            geocoder.geocode({'latLng': latLng}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results.length > 0) {
                         // get result with type "locality"
-                        var location = _.find(results, function (value) {
-                            return value.types[0] === 'locality'
-                        });
+                        var location = _.find(results, function(value) { return value.types[0] === 'locality'});
                         if (location === undefined) {
                             location = results[0];
                         }
-
+                        
                         dfd.resolve(location.formatted_address);
                         //registerAppUserOnBackend(location.formatted_address);
                     } else {
@@ -88,19 +75,17 @@ app.MapExplorerViewModel = (function () {
                     alert('Geocoder failed due to: ' + status);
                 }
             });
-
+            
             return dfd.promise();
         };
-
-        var registerAppUserOnBackend = function (city) {
+        
+        var registerAppUserOnBackend = function(city){
             var appUserData = app.everlive.data('AppUser');
-
+            
             // check if user is already registerd
             var deviceId = device.uuid;
-            var filter = {
-                'DeviceId': deviceId
-            };
-
+            var filter = {'DeviceId':deviceId};
+            
             var appUser = {
                 'City': city,
                 'DeviceId': deviceId,
@@ -109,9 +94,9 @@ app.MapExplorerViewModel = (function () {
                     'latitude': lat
                 }
             };
-
-            appUserData.get(filter, function (data) {
-                if (data.count === 0) {
+            
+            appUserData.get(filter, function(data){
+                if (data.count === 0){
                     // first time register, create
                     appUserData.create(appUser);
                 } else {
@@ -119,65 +104,43 @@ app.MapExplorerViewModel = (function () {
                     appUser.Id = data.result[0].Id;
                     appUserData.updateSingle(appUser);
                 }
-            }, function (error) {
+            }, function(error){
                 alert('notfound');
             });
         };
-
-        var compassSuccess = function (heading) {
-            if (!previousCompassAngle) {
+        
+        var compassSuccess = function(heading){
+            if (!previousCompassAngle){
                 previousCompassAngle = 0;
             }
-
-            if (Math.abs(previousCompassAngle - heading.magneticHeading) > 5) {
+            
+            if (Math.abs(previousCompassAngle - heading.magneticHeading) > 5){
                 previousCompassAngle = heading.magneticHeading;
-
-                drawLine(previousCompassAngle);
+        
+                drawLine(360 - previousCompassAngle);
+                showVisibleCities(360 - previousCompassAngle);
             }
         };
-
-        var compassError = function (compassError) {
+        
+        var compassError = function(compassError){
             alert('Compass error: ' + compassError.code);
         };
-
-        var drawLine = function (angle) {
-            var angleInRad = (360 - angle) * Math.PI / 180;
+        
+        var drawLine = function(angle){
             var px = lng;
-            var py = lat + 1000;
-
-            // rotate px and py around destination
-            var descX = Math.cos(angleInRad) * (px - lat) - Math.sin(angleInRad) * (py - lng) + lat;
-            var descY = Math.sin(angleInRad) * (px - lat) + Math.cos(angleInRad) * (py - lng) + lng;
-
-            // check if new line is out of bounds
-            var inter1 = checkLineIntersection(-170, 80, 170, 80, lng, lat, descX, descY);
-            var inter2 = checkLineIntersection(170, 80, 170, -80, lng, lat, descX, descY);
-            var inter3 = checkLineIntersection(170, -80, -170, -80, lng, lat, descX, descY);
-            var inter4 = checkLineIntersection(-170, -80, -170, 80, lng, lat, descX, descY);
-
-            if (inter1.onLine1 === true && inter1.onLine2 === true) {
-                descX = inter1.x;
-                descY = inter1.y;
-            } else if (inter2.onLine1 === true && inter2.onLine2 === true) {
-                descX = inter2.x;
-                descY = inter2.y;
-            } else if (inter3.onLine1 === true && inter3.onLine2 === true) {
-                descX = inter3.x;
-                descY = inter3.y;
-            } else if (inter4.onLine1 === true && inter4.onLine2 === true) {
-                descX = inter4.x;
-                descY = inter4.y;
-            }
-
+            var py = 90;
+            
+            var rotatedPoint = rotatePoint({longitude:px, latitude:py},{longitude:lng, latitude:lat}, angle);
+            
             var flightPlanCoordinates = [
                 new google.maps.LatLng(lat, lng),
-                new google.maps.LatLng(descY, descX)
+                new google.maps.LatLng(rotatedPoint.y, rotatedPoint.x)
             ];
-
-            if (flightPath) {
+          
+            if (flightPath){
                 flightPath.setMap(null);
             }
-
+            
             flightPath = new google.maps.Polyline({
                 path: flightPlanCoordinates,
                 geodesic: false,
@@ -185,11 +148,77 @@ app.MapExplorerViewModel = (function () {
                 strokeOpacity: 0.5,
                 strokeWeight: 200
             });
-
+            
             flightPath.setMap(map);
         };
-
-        var checkLineIntersection = function (line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
+        
+        var rotatePoint = function(point, origion, degree) {
+            var x =  origion.longitude + Math.cos(toRadians(degree)) * (point.longitude - origion.longitude) - Math.sin(toRadians(degree))  * (point.latitude - origion.latitude) / Math.abs(Math.cos(toRadians(origion.latitude)));
+            var y = origion.latitude + (Math.sin(toRadians(degree)) * (point.longitude - origion.longitude) * Math.abs(Math.cos(toRadians(origion.latitude))) + Math.cos(toRadians(degree))   * (point.latitude - origion.latitude));
+           
+            return {
+                x:x,
+                y:y
+            };
+        };
+        
+        function toRadians(Value) {
+            /** Converts numeric degrees to radians */
+            return Value * Math.PI / 180;
+        }
+        
+        var showVisibleCities = function(angle){
+            var px = lng;
+            var py = lat + 5;
+            
+            var rotatedPoint = rotatePoint({longitude:px, latitude:py},{longitude:lng, latitude:lat}, angle);
+            
+            var userLocation = {
+                longitude: lng,
+                latitude: lat
+            };  
+            
+            var directionPoint = {
+                longitude: rotatedPoint.x,
+                latitude: rotatedPoint.y
+            };
+            
+            $.when(app.Cities.filterCities(userLocation, directionPoint)).then(function(result){
+                drawVisibleCities(result);
+            });
+        };
+        
+        var drawVisibleCities = function(cities){
+            for (i = 0; i < cityMarkers.length; i++){
+                cityMarkers[i].label.setMap(null);
+                cityMarkers[i].setMap(null);
+            }
+            
+            cityMarkers = [];
+            
+            for (i = 0; i < cities.length; i++){
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(cities[i].Location.latitude, cities[i].Location.longitude),
+                    map: map,
+                    icon: {url: 'styles/images/cityPoint.png', size:new google.maps.Size(20, 20)}
+                });
+                
+                var label = new Label({
+                    map: map
+                });
+                label.bindTo('position', marker);
+                //label.bindTo('text', cities[i].City);
+                label.set('text', cities[i].City);
+                label.bindTo('visible', marker);
+                label.bindTo('clickable', marker);
+                label.bindTo('zIndex', marker);
+                marker.label = label;
+                
+                cityMarkers.push(marker);
+            }
+        };
+        
+        var checkLineIntersection = function(line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
             // if the lines intersect, the result contains the x and y of the intersection (treating the lines as infinite) and booleans for whether line segment 1 or line segment 2 contain the point
             var denominator, a, b, numerator1, numerator2, result = {
                 x: null,
@@ -207,11 +236,11 @@ app.MapExplorerViewModel = (function () {
             numerator2 = ((line1EndX - line1StartX) * a) - ((line1EndY - line1StartY) * b);
             a = numerator1 / denominator;
             b = numerator2 / denominator;
-
+        
             // if we cast these lines infinitely in both directions, they intersect here:
             result.x = line1StartX + (a * (line1EndX - line1StartX));
             result.y = line1StartY + (a * (line1EndY - line1StartY));
-            /*
+        /*
                 // it is worth noting that this should be the same as:
                 x = line2StartX + (b * (line2EndX - line2StartX));
                 y = line2StartX + (b * (line2EndY - line2StartY));
@@ -227,13 +256,12 @@ app.MapExplorerViewModel = (function () {
             // if line1 and line2 are segments, they intersect if both of the above are true
             return result;
         };
-
+        
         return {
             init: init,
-            show: show,
-            nesto: nesto
+            show: show
         }
     })();
-
+    
     return viewModel;
 })();
