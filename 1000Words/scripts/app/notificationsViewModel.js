@@ -20,7 +20,7 @@ notifications.NotificationsViewModel = kendo.observable({
         if (!container.is(':visible')) {
             $("#notificationList").kendoMobileListView({
                 dataSource: this.notifications,
-                template: "<div><span>#:payload.message.Message#</span><div>",
+                template: "<div>#:payload.message.Message#<div>",
             });
 
             container.show("slow");
