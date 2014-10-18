@@ -1,4 +1,4 @@
-var cities = {
+var cities = (function() {
     var getAllCities = function () {
         var dfd = new $.Deffered();
 
@@ -61,4 +61,4 @@ var cities = {
         getAllCities: getAllCities,
         ffilterCities: filterCities
     }
-}
+}());
