@@ -21,17 +21,28 @@ app.MapExplorerViewModel = (function(){
         
         var show = function() {
             kendo.bind($('#notificationDiv'), notifications.NotificationsViewModel);
+            kendo.bind($('#notificationListContainer'), notifications.NotificationsViewModel);
             
             setTimeout(function() {
                 var notification = {
                     payload: {
                         message: {
-                            Message: 'You received a photo request from Novi Sad!'
+                            Message: 'You received a photo request from Novi Sad!',
+                            DeviceId: '123456'
+                        }
+                    }
+                };
+                var notification1 = {
+                    payload: {
+                        message: {
+                            Message: 'You received a photo request from Sofia!',
+                            DeviceId: '321654'
                         }
                     }
                 };
                 
                 notifications.NotificationsViewModel.onNotificationReceived(notification);
+                notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
         };
         
