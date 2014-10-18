@@ -8,26 +8,33 @@ app.MapExplorerViewModel = (function(){
             watchID,
             flightPath,
             previousCompassAngle,
-            cityMarkers = [];
+            cityMarkers = [],
+            currentZoom = 2;
+        
+        var searchOffset = [6.5, 5, 4.5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
         
         var init = function(){
-            //alert('init');
             initMap();
             navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {enableHighAccuracy: true});
             watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
         };
         
-        var show = function(){
-            //alert('show');
+        var show = function() {
+            
         };
         
-        var initMap = function(){
+        var initMap = function() {
             var mapProp = {
                 center: new google.maps.LatLng(0,0),
-                zoom: 2,
+                zoom: currentZoom,
                 mapTypeId: google.maps.MapTypeId.ROADMAP};
             
             map = new google.maps.Map(document.getElementById("googleMapView"), mapProp);  
+            
+            google.maps.event.addListener(map, 'zoom_changed', function() {
+                    currentZoom = map.getZoom();
+                    showVisibleCities(360 - previousCompassAngle);
+            });
         };
         
         var geolocationSuccess = function(position){
@@ -44,10 +51,6 @@ app.MapExplorerViewModel = (function(){
         };
         
         var loadCurrentPosition = function(){
-            //var marker = new google.maps.Marker({ position: new google.maps.LatLng(lat, lng)});
-
-            //marker.setMap(map);
-            
             var latLng = new google.maps.LatLng(lat, lng);
             map.panTo(latLng);  
         };
@@ -67,7 +70,6 @@ app.MapExplorerViewModel = (function(){
                         }
                         
                         dfd.resolve(location.formatted_address);
-                        //registerAppUserOnBackend(location.formatted_address);
                     } else {
                         alert('No results found');
                     }
@@ -100,7 +102,7 @@ app.MapExplorerViewModel = (function(){
                     // first time register, create
                     appUserData.create(appUser);
                 } else {
-                    // already registerd, update
+                    // already registered, update
                     appUser.Id = data.result[0].Id;
                     appUserData.updateSingle(appUser);
                 }
@@ -169,7 +171,7 @@ app.MapExplorerViewModel = (function(){
         
         var showVisibleCities = function(angle){
             var px = lng;
-            var py = lat + 5;
+            var py = lat + searchOffset[currentZoom + 1];
             
             var rotatedPoint = rotatePoint({longitude:px, latitude:py},{longitude:lng, latitude:lat}, angle);
             
