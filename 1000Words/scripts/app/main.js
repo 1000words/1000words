@@ -1,7 +1,7 @@
 var app = (function () {
     var everlive = new Everlive({
-            apiKey: settings.everlive.apiKey,
-            scheme: settings.everlive.schema
+            apiKey: settings.Settings.everlive.apiKey,
+            scheme: settings.Settings.everlive.schema
         });
 
     var mobileApp = new kendo.mobile.Application(document.body, {
@@ -11,13 +11,63 @@ var app = (function () {
     });
 
     var onDeviceReady = function () {
-        //mobileApp.navigate('views/splashScreen.html');
-        setTimeout(function () {
-            mobileApp.navigate('views/mapExplorerView.html');
-        }, 1000);
-        
+        enablePushNotifications(); 
+       
         navigator.splashscreen.hide();
     }
+    
+    var enablePushNotifications = function () {
+        var currentDevice = everlive.push.currentDevice(false),
+            settings = this.settings.Settings.pushSettings;
+        
+        settings.notificationCallbackAndroid = function() {};
+        settings.notificationCallbackIOS = function() {};
+        
+        currentDevice.enableNotifications(settings)
+            .then(
+                function(initResult) {
+                    return currentDevice.getRegistration();
+                },
+                function(err) {
+                    alert("ERROR!<br /><br />An error occured while initializing the device for push notifications.<br/><br/>" + err.message);
+                }
+            ).then(
+                function(registration) {                        
+                    finishPushRegister();                      
+                },
+                function(err) {
+                    if(err.code === 801) {
+                        registerInEverlive();      
+                    }
+                    else {                        
+                        alert("ERROR!<br /><br />An error occured while checking device registration status: <br/><br/>" + err.message);
+                    }
+                }
+            );
+        };
+    
+    var registerInEverlive = function() {
+        var currentDevice = everlive.push.currentDevice();
+                 
+        if (!currentDevice.pushToken) {
+            alert("ERROR! Unable to register for push notifications, no push token.")
+        }
+        
+        everlive.push.currentDevice()
+            .register({ DeviceID: device.uuid })
+            .then(
+            function() {
+                finishPushRegister();
+            },
+            function(err) {
+                alert('REGISTER ERROR: ' + JSON.stringify(err));
+            }
+        );
+    };
+    
+    var finishPushRegister = function() {
+        mobileApp.navigate('views/mapExplorerView.html');
+    };
 
     var os = kendo.support.mobileOS,
         statusBarStyle = os.ios && os.flatVersion >= 700 ? 'black-translucent' : 'black';

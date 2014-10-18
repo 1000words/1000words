@@ -1,9 +1,28 @@
-var settings = {
+var settings = settings || {};
+
+settings.Settings = (function() {
     
-    everlive: {
+    var everlive = {
         apiKey: 'bdkTSSiByo7QWhDS',
         schema: 'http'
-    },
+    };
     
-    googleProjectNumber: '930173497200'
-}
+    var googleProjectNumber = '930173497200';
+    
+    var pushSettings = {
+        android: {
+            senderID: googleProjectNumber
+        },
+        iOS: {
+            badge: "true",
+            sound: "true",
+            alert: "true"
+        },
+    };
+    
+    return {
+        everlive: everlive,
+        googleProjectNumber: googleProjectNumber,
+        pushSettings: pushSettings
+    };
+})(); 
