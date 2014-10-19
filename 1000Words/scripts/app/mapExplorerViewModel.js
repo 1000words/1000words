@@ -10,7 +10,8 @@ app.MapExplorerViewModel = (function(){
             flightPath,
             previousCompassAngle,
             cityMarkers = [],
-            currentZoom = 2;
+            currentZoom = 2,
+            offsetLimit = 0;
         
         var searchOffset = [7, 7, 5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
         
@@ -75,7 +76,8 @@ app.MapExplorerViewModel = (function(){
                 registerAppUserOnBackend(city);
             });
             
-            navigator.compass.getCurrentHeading(compassFirstSuccess, compassError);
+            //navigator.compass.getCurrentHeading(compassFirstSuccess, compassError);
+            watchID = navigator.compass.watchHeading(compassSuccess, compassError, {frequency: 100});
         };
         
         var geolocationError = function(error){
@@ -157,8 +159,15 @@ app.MapExplorerViewModel = (function(){
         };
         
         var compassSuccess = function(heading){
-            if (previousCompassAngle){
-                var limit = 5;
+            if (offsetLimit == 0){
+                previousCompassAngle = heading.magneticHeading;           
+                drawLine(360 - previousCompassAngle);
+                showVisibleCities(360 - previousCompassAngle);
+                offsetLimit = 5;
+            }
+            else
+            {
+                var limit = offsetLimit;
                 
                 if (currentZoom < 5)
                 {
