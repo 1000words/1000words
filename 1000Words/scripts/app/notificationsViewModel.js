@@ -21,7 +21,7 @@ notifications.NotificationsViewModel = kendo.observable({
         if (!container.is(':visible')) {
             $("#notificationList").kendoMobileListView({
                 dataSource: this.notifs,
-                template: "<div><span class='notificationContent' id='accept#:payload.message.Sender#'>#:payload.message.Message#</span><span class='cancelNotification' id='reject#:payload.message.Sender#'></span></div>",
+                template: "<div><span class='notificationContent' id='accept#:payload.message.Sender#'>Pending notification from <b>#:payload.message.Message#</b></span><span class='cancelNotification' id='reject#:payload.message.Sender#'></span></div>",
             });
             container.show("slow");
             this.setClickListeners();

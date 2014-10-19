@@ -206,7 +206,7 @@ body {
     height: 60px;
     display: inline-block;
     background-size: contain;
-    margin-right: 4px;
+    margin-right: 6px;
 }
 #dismissButton {
     background: url('images/cancelRequest.png');
@@ -214,7 +214,7 @@ body {
     height: 60px;
     display: inline-block;
     background-size: contain;
-    margin-left: 4px;
+    margin-left: 6px;
 }
 .cancelNotification {
     background: url('images/closeNotification.png');
@@ -268,5 +268,5 @@ body {
    	background-size: cover;
 	background-repeat: no-repeat;
 	background-color: black;
-
+    background-position: center center;
 }

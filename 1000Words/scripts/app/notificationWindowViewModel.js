@@ -19,7 +19,7 @@ app.NotificationWindowViewModel = kendo.observable({
         }, function(error){
             //$("#image").attr("src","styles/images/background.jpg");
             //$("#image").show();
-            $('.image3').css('background-image', 'url(styles/images/background.jpg)');
+            $('.image3').css('background-image', 'url(styles/images/placeholder_image1.png)');
         });
 
     },
