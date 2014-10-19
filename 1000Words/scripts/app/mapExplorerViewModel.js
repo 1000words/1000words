@@ -10,7 +10,7 @@ app.MapExplorerViewModel = (function(){
             flightPath,
             previousCompassAngle,
             cityMarkers = [],
-            currentZoom = 2,
+            currentZoom = 3,
             offsetLimit = 0;
         
         var searchOffset = [7, 7, 5, 3.8, 2.8, 2.4, 1.8, 1.2, 0.7, 0.2, 0.09, 0.02, 0.009, 0.001, 0.0009, 0.00001];
@@ -43,7 +43,7 @@ app.MapExplorerViewModel = (function(){
                     }
                 };
                 
-               //notifications.NotificationsViewModel.onNotificationReceived(notification);
+               // notifications.NotificationsViewModel.onNotificationReceived(notification);
                // notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
         };

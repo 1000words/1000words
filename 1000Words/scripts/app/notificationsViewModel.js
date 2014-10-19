@@ -12,7 +12,7 @@ notifications.NotificationsViewModel = kendo.observable({
         if (typeof (notification) != 'undefined') {
             this.notifs.push(notification);
             this.set('notificationCount', this.notifs.length);
-            navigator.navigation.vibrate(200);
+            navigator.notification.vibrate(200);
         }
     },
 
