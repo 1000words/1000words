@@ -9,7 +9,7 @@ notifications.NotificationsViewModel = kendo.observable({
 
     onNotificationReceived: function (notification) {
         this.set('hasNotification', true);
-        if (typeof (notification) != 'undefined') {        
+        if (typeof (notification) != 'undefined') {
             this.notifs.push(notification);
             this.set('notificationCount', this.notifs.length);
         }
@@ -34,12 +34,14 @@ notifications.NotificationsViewModel = kendo.observable({
         for (var i = 0; i < this.notifs.length; i++) {
             var notif = this.notifs[i];
 
-            $("#accept" + notif.payload.message.Sender).click((function (n) {
+            $("#accept" + notif.payload.message.Sender).click((function (n, index, removeNotification) {
                 return function () {
                     app.NotificationWindowViewModel.activeNotification = n.payload;
+                    removeNotification(index);
+                    $('#notificationListContainer').hide();
                     app.mobileApp.navigate('views/notificationWindow.html');
                 };
-            })(notif));
+            })(notif, i, this.removeNotification));
 
             $("#reject" + notif.payload.message.Sender).click((function (n, index, removeNotification) {
                 return function () {
@@ -53,12 +55,12 @@ notifications.NotificationsViewModel = kendo.observable({
         this.notifications.NotificationsViewModel.notifs.splice(index, 1);
         $("#notificationList").data("kendoMobileListView").dataSource.read();
         this.notifications.NotificationsViewModel.setClickListeners();
-        
-        if(this.notifications.NotificationsViewModel.notifs.length === 0){
+
+        if (this.notifications.NotificationsViewModel.notifs.length === 0) {
             $('#notificationListContainer').hide();
             this.notifications.NotificationsViewModel.set('hasNotification', false);
         }
-        
+
         this.notifications.NotificationsViewModel.set('notificationCount', this.notifications.NotificationsViewModel.notifs.length);
     }
 });
