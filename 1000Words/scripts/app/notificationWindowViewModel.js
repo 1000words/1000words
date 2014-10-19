@@ -3,6 +3,8 @@ var app = app || {};
 app.NotificationWindowViewModel = kendo.observable({
     activeNotification: {},
 
+    map: {},
+
     isProgressVisible: false,
 
     progressText: '',
@@ -13,13 +15,25 @@ app.NotificationWindowViewModel = kendo.observable({
 
     show: function () {
         app.everlive.Files.getDownloadUrlById(app.NotificationWindowViewModel.activeNotification.message.ImageName).then(function (url) {
-            $("#image").attr("src",url);
+            $("#image").attr("src", url);
             $("#image").show();
-        }, function(error){
-            $("#image").attr("src","styles/images/background.jpg");
+        }, function (error) {
+            $("#image").attr("src", "styles/images/background.jpg");
             $("#image").show();
         });
 
+        var loc = app.NotificationWindowViewModel.activeNotification.message.CityCoords;
+        
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(loc.Latitude, loc.Longitude),
+            map: app.NotificationWindowViewModel.map,
+            icon: {
+                url: 'styles/images/cityPoint.png',
+                size: new google.maps.Size(20, 20)
+            }
+        });
+        var latLng = new google.maps.LatLng(loc.Latitude, loc.Longitude);
+        app.NotificationWindowViewModel.map.panTo(latLng);
     },
 
     reply: function () {
@@ -33,14 +47,13 @@ app.NotificationWindowViewModel = kendo.observable({
     },
 
     initMap: function () {
-
         var mapProp = {
             center: new google.maps.LatLng(0, 0),
             zoom: 2,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
-        map = new google.maps.Map(document.getElementById("googleMapViewImage"), mapProp);
+        app.NotificationWindowViewModel.map = new google.maps.Map(document.getElementById("googleMapViewImage"), mapProp);
     },
 
     takePicture: function () {
@@ -54,15 +67,15 @@ app.NotificationWindowViewModel = kendo.observable({
                     ContentType: "image/jpeg",
                     base64: data,
                     Id: filename
-                }).then(function () {
-                    $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/sendPhoto?to=' + app.NotificationWindowViewModel.activeNotification.message.Sender + '&imageName=' + filename + '&sender=' + device.uuid + '&senderCity=' + app.MapExplorerViewModel.userLocation.city + '&cityLatitude=' + app.MapExplorerViewModel.userLocation.latitude + '&cityLongitude=' + app.MapExplorerViewModel.userLocation.longitude)
-                    .fail(function(){
-                        alert('failed to send notification');
-                    });
+                }).then(function (data) {
+                    $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/sendPhoto?to=' + app.NotificationWindowViewModel.activeNotification.message.Sender + '&imageName=' + data.result.Id + '&sender=' + device.uuid + '&senderCity=' + app.MapExplorerViewModel.userLocation.city + '&cityLatitude=' + app.MapExplorerViewModel.userLocation.latitude + '&cityLongitude=' + app.MapExplorerViewModel.userLocation.longitude)
+                        .fail(function () {
+                            alert('failed to send notification');
+                        });
 
                     that.set('isProgressVisible', false);
                     app.mobileApp.navigate('#:back');
-                }, function(error){
+                }, function (error) {
                     alert('Failed to upload image! Error: ' + JSON.stringify(error));
                 });
             },

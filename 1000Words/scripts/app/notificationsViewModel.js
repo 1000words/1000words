@@ -9,6 +9,7 @@ notifications.NotificationsViewModel = kendo.observable({
 
     onNotificationReceived: function (notification) {
         this.set('hasNotification', true);
+        alert(JSON.stringify(notification));
         if (typeof (notification) != 'undefined') {
             this.notifs.push(notification);
             this.set('notificationCount', this.notifs.length);
