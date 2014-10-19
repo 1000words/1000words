@@ -28,25 +28,17 @@ app.MapExplorerViewModel = (function(){
                 var notification = {
                     payload: {
                         message: {
-                            Message: 'You received a photo from Novi Sad!',
+                            Message: 'Novi Sad',
                             Sender: '123456',
-                            ImageName: '8a5e1050-572e-11e4-bccd-0bfc49e32ef9',
-                            CityCoords:{
-                                Latitude: 20,
-                                Longitude: 20
-                            }
+                            ImageName: '8a5e1050-572e-11e4-bccd-0bfc49e32ef9'
                         }
                     }
                 };
                 var notification1 = {
                     payload: {
                         message: {
-                            Message: 'You received a photo request from Sofia!',
-                            Sender: '321654',
-                            CityCoords:{
-                                Latitude: 20,
-                                Longitude: 20
-                            }
+                            Message: 'Sofia',
+                            Sender: '321654'
                         }
                     }
                 };
@@ -299,7 +291,7 @@ app.MapExplorerViewModel = (function(){
             cityName: 'name',
             showPopup: false,
             sendRequest: function(){
-                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid + '&senderCity=' + userLocationCity + '&cityLatitude=' + lat + '&cityLongitude=' + lng);
+                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid + '&senderCity=' + userLocationCity);
                 
                 this.set('showPopup', false);
             },

@@ -15,25 +15,15 @@ app.NotificationWindowViewModel = kendo.observable({
 
     show: function () {
         app.everlive.Files.getDownloadUrlById(app.NotificationWindowViewModel.activeNotification.message.ImageName).then(function (url) {
-            $("#image").attr("src", url);
-            $("#image").show();
-        }, function (error) {
-            $("#image").attr("src", "styles/images/background.jpg");
-            $("#image").show();
+            //$("#image").attr("src",url);
+            //$("#image").show();
+            $('.image3').css('background-image', 'url('+url+')');
+        }, function(error){
+            //$("#image").attr("src","styles/images/background.jpg");
+            //$("#image").show();
+            $('.image3').css('background-image', 'url(styles/images/background.jpg)');
         });
 
-        var loc = app.NotificationWindowViewModel.activeNotification.message.CityCoords;
-        
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(loc.Latitude, loc.Longitude),
-            map: app.NotificationWindowViewModel.map,
-            icon: {
-                url: 'styles/images/cityPoint.png',
-                size: new google.maps.Size(20, 20)
-            }
-        });
-        var latLng = new google.maps.LatLng(loc.Latitude, loc.Longitude);
-        app.NotificationWindowViewModel.map.panTo(latLng);
     },
 
     reply: function () {
