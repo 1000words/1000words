@@ -201,12 +201,20 @@ body {
     color: #fafafa;
 }
 #replyButton {
-    background: rgb(250, 180, 26);
-    margin-right: 8px;
+    background: url('images/notification.png');
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    background-size: contain;
+    margin-right: 4px;
 }
 #dismissButton {
-    background: gray;
-    margin-left: 8px;
+    background: url('images/cancelRequest.png');
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    background-size: contain;
+    margin-left: 4px;
 }
 .cancelNotification {
     background: url('images/closeNotification.png');
@@ -233,4 +241,32 @@ body {
     background-color: white;
     margin-top: 30px;
     position: inherit !important;
+}
+
+.container3{
+    position: absolute;
+    top:50px;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+.map3{
+    position: absolute;
+    bottom: 70%;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.image3{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 30%;
+   	background-size: cover;
+	background-repeat: no-repeat;
+	background-color: black;
+
 }

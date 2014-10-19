@@ -13,11 +13,13 @@ app.NotificationWindowViewModel = kendo.observable({
 
     show: function () {
         app.everlive.Files.getDownloadUrlById(app.NotificationWindowViewModel.activeNotification.message.ImageName).then(function (url) {
-            $("#image").attr("src",url);
-            $("#image").show();
+            //$("#image").attr("src",url);
+            //$("#image").show();
+            $('.image3').css('background-image', 'url('+url+')');
         }, function(error){
-            $("#image").attr("src","styles/images/background.jpg");
-            $("#image").show();
+            //$("#image").attr("src","styles/images/background.jpg");
+            //$("#image").show();
+            $('.image3').css('background-image', 'url(styles/images/background.jpg)');
         });
 
     },

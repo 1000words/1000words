@@ -28,7 +28,7 @@ app.MapExplorerViewModel = (function(){
                 var notification = {
                     payload: {
                         message: {
-                            Message: 'You received a photo from Novi Sad!',
+                            Message: 'Novi Sad',
                             Sender: '123456',
                             ImageName: '8a5e1050-572e-11e4-bccd-0bfc49e32ef9'
                         }
@@ -37,7 +37,7 @@ app.MapExplorerViewModel = (function(){
                 var notification1 = {
                     payload: {
                         message: {
-                            Message: 'You received a photo request from Sofia!',
+                            Message: 'Sofia',
                             Sender: '321654'
                         }
                     }
