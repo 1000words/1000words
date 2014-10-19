@@ -65,10 +65,13 @@ app.MapExplorerViewModel = (function(){
         var geolocationSuccess = function(position){
             lat = position.coords.latitude;
             lng = position.coords.longitude;
+            app.MapExplorerViewModel.userLocation.longitude = lng;
+            app.MapExplorerViewModel.userLocation.latitude = lat;
             loadCurrentPosition();
             
             $.when(getUserCity()).then(function(city){
                 userLocationCity = city;
+                app.MapExplorerViewModel.userLocation.city = city;
                 registerAppUserOnBackend(city);
             });
             
