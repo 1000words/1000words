@@ -294,7 +294,7 @@ app.MapExplorerViewModel = (function(){
             cityName: 'name',
             showPopup: false,
             sendRequest: function(){
-                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid + '&senderCity=' + userLocationCity);
+                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid + '&senderCity=' + userLocationCity + '&cityLatitude=' + lat + '&cityLongitude=' + lng);
                 
                 this.set('showPopup', false);
             },
