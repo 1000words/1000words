@@ -8,10 +8,21 @@ app.NotificationWindowViewModel = kendo.observable({
     progressText: '',
 
     init: function () {
-        app.NotificationWindowViewModel.initMap();
+        if (typeof (app.NotificationWindowViewModel.activeNotification.from) != 'undefined') 
+        {
+            app.NotificationWindowViewModel.initMap();
+        }
+        else{
+            $("#googleMapView").hide();
+        }
     },
 
-    show: function () {},
+    show: function () {
+        app.everlive.Files.getDownloadUrlById(app.NotificationWindowViewModel.activeNotification.message.ImageName).then(function(url){
+            $("#image").css('background', 'url(' + url + ')');
+        });
+        
+    },
 
     reply: function () {
         this.takePicture();
@@ -24,7 +35,7 @@ app.NotificationWindowViewModel = kendo.observable({
     },
 
     initMap: function () {
-        
+
         var mapProp = {
             center: new google.maps.LatLng(0, 0),
             zoom: 2,
@@ -47,9 +58,10 @@ app.NotificationWindowViewModel = kendo.observable({
                 app.everlive.Files.create({
                     Filename: filename,
                     ContentType: "image/jpeg",
-                    base64: data
+                    base64: data,
+                    Id: filename
                 }).then(function () {
-                    $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/sendPhoto?to=' + app.NotificationWindowViewModel.activeNotification.payload.message.DeviceId + '&imageName=' + filename + '&sender=' + device.uuid);
+                    $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/sendPhoto?to=' + app.NotificationWindowViewModel.activeNotification.payload.message.DeviceId + '&imageName=' + filename + '&sender=' + device.uuid + '&senderCity=' + app.MapExplorerViewModel.userLocation.city + '&cityLatitude=' + app.MapExplorerViewModel.userLocation.latitude + '&cityLongitude=' + app.MapExplorerViewModel.userLocation.longitude);
 
                     that.set('isProgressVisible', false);
                     app.mobileApp.navigate('#:back');

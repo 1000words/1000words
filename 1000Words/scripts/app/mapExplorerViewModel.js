@@ -28,8 +28,9 @@ app.MapExplorerViewModel = (function(){
                 var notification = {
                     payload: {
                         message: {
-                            Message: 'You received a photo request from Novi Sad!',
-                            DeviceId: '123456'
+                            Message: 'You received a photo from Novi Sad!',
+                            Sender: '123456',
+                            ImageName: 'acbxq64cG.jpg'
                         }
                     }
                 };
@@ -37,18 +38,13 @@ app.MapExplorerViewModel = (function(){
                     payload: {
                         message: {
                             Message: 'You received a photo request from Sofia!',
-                            DeviceId: '321654'
+                            Sender: '321654'
                         }
                     }
                 };
                 
                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                notifications.NotificationsViewModel.onNotificationReceived(notification);
-                //notifications.NotificationsViewModel.onNotificationReceived(notification1);
+                notifications.NotificationsViewModel.onNotificationReceived(notification1);
             }, 200);
         };
         
@@ -295,7 +291,7 @@ app.MapExplorerViewModel = (function(){
             cityName: 'name',
             showPopup: false,
             sendRequest: function(){
-                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid);
+                $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/pingUsersInCity?city=' + this.cityName + '&senderId=' + device.uuid + '&senderCity=' + userLocationCity);
                 
                 this.set('showPopup', false);
             },
@@ -355,7 +351,12 @@ app.MapExplorerViewModel = (function(){
             init: init,
             show: show,
             whatchId: watchID,
-            userInfoViewModel: userInfoViewModel
+            userInfoViewModel: userInfoViewModel,
+            userLocation: {
+                longitude: lng,
+                latitude: lat,
+                city: userLocationCity
+            }
         }
     })();
     
