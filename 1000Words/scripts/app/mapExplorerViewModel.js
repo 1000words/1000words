@@ -30,7 +30,7 @@ app.MapExplorerViewModel = (function(){
                         message: {
                             Message: 'You received a photo from Novi Sad!',
                             Sender: '123456',
-                            ImageName: 'acbxq64cG.jpg'
+                            ImageName: '8a5e1050-572e-11e4-bccd-0bfc49e32ef9'
                         }
                     }
                 };

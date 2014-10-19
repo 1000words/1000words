@@ -8,20 +8,18 @@ app.NotificationWindowViewModel = kendo.observable({
     progressText: '',
 
     init: function () {
-        if (typeof (app.NotificationWindowViewModel.activeNotification.from) != 'undefined') 
-        {
-            app.NotificationWindowViewModel.initMap();
-        }
-        else{
-            $("#googleMapView").hide();
-        }
+        app.NotificationWindowViewModel.initMap();
     },
 
     show: function () {
-        app.everlive.Files.getDownloadUrlById(app.NotificationWindowViewModel.activeNotification.message.ImageName).then(function(url){
-            $("#image").css('background', 'url(' + url + ')');
+        app.everlive.Files.getDownloadUrlById(app.NotificationWindowViewModel.activeNotification.message.ImageName).then(function (url) {
+            $("#image").attr("src",url);
+            $("#image").show();
+        }, function(error){
+            $("#image").attr("src","styles/images/background.jpg");
+            $("#image").show();
         });
-        
+
     },
 
     reply: function () {
@@ -42,11 +40,7 @@ app.NotificationWindowViewModel = kendo.observable({
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
-        map = new google.maps.Map(document.getElementById("googleMapView"), mapProp);
-
-        google.maps.event.addListener(map, 'zoom_changed', function () {
-            showVisibleCities(360 - previousCompassAngle);
-        });
+        map = new google.maps.Map(document.getElementById("googleMapViewImage"), mapProp);
     },
 
     takePicture: function () {
@@ -61,10 +55,15 @@ app.NotificationWindowViewModel = kendo.observable({
                     base64: data,
                     Id: filename
                 }).then(function () {
-                    $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/sendPhoto?to=' + app.NotificationWindowViewModel.activeNotification.payload.message.DeviceId + '&imageName=' + filename + '&sender=' + device.uuid + '&senderCity=' + app.MapExplorerViewModel.userLocation.city + '&cityLatitude=' + app.MapExplorerViewModel.userLocation.latitude + '&cityLongitude=' + app.MapExplorerViewModel.userLocation.longitude);
+                    $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/sendPhoto?to=' + app.NotificationWindowViewModel.activeNotification.message.Sender + '&imageName=' + filename + '&sender=' + device.uuid + '&senderCity=' + app.MapExplorerViewModel.userLocation.city + '&cityLatitude=' + app.MapExplorerViewModel.userLocation.latitude + '&cityLongitude=' + app.MapExplorerViewModel.userLocation.longitude)
+                    .fail(function(){
+                        alert('failed to send notification');
+                    });
 
                     that.set('isProgressVisible', false);
                     app.mobileApp.navigate('#:back');
+                }, function(error){
+                    alert('Failed to upload image! Error: ' + JSON.stringify(error));
                 });
             },
             function (msg) {

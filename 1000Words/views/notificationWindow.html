@@ -1,18 +1,21 @@
 <div data-role="view" data-layout="defaultLayout" id="notificationWindow" class="appView" data-model="app.NotificationWindowViewModel" data-init="app.NotificationWindowViewModel.init" data-show="app.NotificationWindowViewModel.show" data-stretch="true">
     <div>
         <div>
-            <div class="mapContent" id="googleMapView">
+            <div class="map-content-img" id="googleMapViewImage">
             </div>
-            <div class="image">
-                <div id="progress" data-bind="visible: isProgressVisible">
-                    <span data-bind="text: progressText"></span>
-                </div>
-                <div class="message">
-                    <span data-bind="text: activeNotification.payload.message.Message"></span>
-                </div>
-                <div class="buttons">
-                    <a href="#" id="replyButton" class="button" data-bind="click: reply">Reply</a>
-                    <a href="#" id="dismissButton" class="button" data-bind="click: dismiss">Dismiss</a>
+            <div class="img-container">
+                <img src="" class="image" id="image" style="display: none"/>
+                <div class="image-div">
+                    <div id="progress" data-bind="visible: isProgressVisible">
+                        <span data-bind="text: progressText"></span>
+                    </div>
+                    <div class="message">
+                        <span data-bind="text: activeNotification.message.Message"></span>
+                    </div>
+                    <div class="buttons">
+                        <a href="#" id="replyButton" class="button" data-bind="click: reply">Reply</a>
+                        <a href="#" id="dismissButton" class="button" data-bind="click: dismiss">Dismiss</a>
+                    </div>
                 </div>
             </div>
         </div>
