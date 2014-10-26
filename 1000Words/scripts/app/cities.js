@@ -4,9 +4,14 @@ app.Cities = (function(){
     var getAllCities = function () {
         var dfd = new $.Deferred();
 
-        app.everlive.data('AppUser').get().then(function (data) {
-            dfd.resolve(data);
-        });
+        //app.everlive.data('AppUser').get().then(function (data) {
+        //   dfd.resolve(res);
+        //});
+
+        $.get('http://api.everlive.com/v1/' + settings.Settings.everlive.apiKey + '/functions/getCitiesUnique')
+            .then(function (data) {
+                dfd.resolve(data);
+            });
 
         return dfd;
     }
@@ -36,18 +41,18 @@ app.Cities = (function(){
                 };
 
             var result = [];
-            for (var i = 0; i < allCities.count; i++) {
+            for (var i = 0; i < allCities.length; i++) {
                 var k = {
-                    x: Number(allCities.result[i].Location.longitude) - x,
-                    y: Number(allCities.result[i].Location.latitude) - y
+                    x: Number(allCities[i].Location.longitude) - x,
+                    y: Number(allCities[i].Location.latitude) - y
                 }
                 dotLeftLineRelation = dotLineRelation(k, a, c),
                 dotRightLineRelation = dotLineRelation(k, b, d),
                 dotBottomLineRelation = dotLineRelation(k, a, b);
 
                 if ((dotLeftLineRelation < 0 && dotRightLineRelation > 0 && dotBottomLineRelation > 0) ||
-                       userLocation.city === allCities.result[i].City) {
-                    result.push(allCities.result[i]);
+                       userLocation.city === allCities[i].City) {
+                    result.push(allCities[i]);
                     
                 }
             }

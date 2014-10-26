@@ -13,11 +13,17 @@ settings.Settings = (function() {
         android: {
             senderID: googleProjectNumber
         },
+        wp8: {
+            channelName: "100WordsChannel"
+        },
         iOS: {
             badge: "true",
             sound: "true",
             alert: "true"
         },
+        wp8:{
+            channelName: '1000WordsChannel'
+        }
     };
     
     return {

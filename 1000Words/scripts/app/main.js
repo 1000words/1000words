@@ -1,4 +1,9 @@
 var app = (function () {
+    window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+        alert(url + ":" + lineNumber + ": " + errorMsg);
+        return false;
+    }
+    
     var everlive = new Everlive({
             apiKey: settings.Settings.everlive.apiKey,
             scheme: settings.Settings.everlive.schema
@@ -34,7 +39,7 @@ var app = (function () {
                     return currentDevice.getRegistration();
                 },
                 function(err) {
-                    //alert("ERROR!<br /><br />An error occured while initializing the device for push notifications.<br/><br/>" + err.message);
+                    alert("ERROR!<br /><br />An error occured while initializing the device for push notifications.<br/><br/>" + err.message);
                 }
             ).then(
                 function(registration) {                        
@@ -45,7 +50,7 @@ var app = (function () {
                         registerInEverlive();      
                     }
                     else {                        
-                        //alert("ERROR!<br /><br />An error occured while checking device registration status: <br/><br/>" + err.message);
+                        alert("ERROR!<br /><br />An error occured while checking device registration status: <br/><br/>" + err.message);
                     }
                 }
             );
